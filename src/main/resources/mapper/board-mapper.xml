@@ -40,4 +40,7 @@
         from board_table order by id desc limit #{start}, #{limit}
 -- map으로 보낼 때는 맵에 데이터를 넣은 변수명을 넣어주면 된다.
     </select>
+    <select id="count" resultType="Integer">
+        select count(id) from board_table
+    </select>
 </mapper>

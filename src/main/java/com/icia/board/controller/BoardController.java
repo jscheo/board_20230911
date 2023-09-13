@@ -3,6 +3,7 @@ package com.icia.board.controller;
 import com.icia.board.dto.BoardDTO;
 import com.icia.board.dto.BoardFileDTO;
 import com.icia.board.dto.CommentDTO;
+import com.icia.board.dto.PageDTO;
 import com.icia.board.service.BoardService;
 import com.icia.board.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,11 +43,16 @@ public class BoardController {
         List<BoardDTO> boardDTOList = boardService.pagingList(page);
         System.out.println("boardDTOList = " + boardDTOList);
         model.addAttribute("boardList", boardDTOList);
+
+        PageDTO pageDTO = boardService.pageNumber(page);
+        model.addAttribute("paging", pageDTO);
         return "boardPages/boardList";
     }
 
     @GetMapping
-    public String findById(@RequestParam("id") Long id, Model model) {
+    public String findById(@RequestParam("id") Long id,
+                           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                           Model model) {
         // 조회수 처리
         // 데이터 가져오기
         boardService.updateHits(id);
@@ -64,6 +70,7 @@ public class BoardController {
         }else{
             model.addAttribute("commentList", commentDTOList);
         }
+        model.addAttribute("page", page);
         return "boardPages/boardDetail";
     }
 
@@ -86,6 +93,19 @@ public class BoardController {
     @GetMapping("/delete")
     public String delete(@RequestParam("id") Long id) {
         boardService.delete(id);
+        return "redirect:/board/list";
+    }
+
+    @GetMapping("/sample")
+    public String sampleData() {
+        for (int i = 1; i <= 20; i++) {
+            BoardDTO boardDTO = new BoardDTO();
+            boardDTO.setBoardWriter("aa");
+            boardDTO.setBoardTitle("title" + i);
+            boardDTO.setBoardContents("contents" + i);
+            boardDTO.setBoardPass("pass" + i);
+            boardService.sampleData(boardDTO);
+        }
         return "redirect:/board/list";
     }
 
