@@ -2,7 +2,9 @@ package com.icia.board.controller;
 
 import com.icia.board.dto.BoardDTO;
 import com.icia.board.dto.BoardFileDTO;
+import com.icia.board.dto.CommentDTO;
 import com.icia.board.service.BoardService;
+import com.icia.board.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,8 +16,11 @@ import java.util.List;
 @Controller
 @RequestMapping("/board")
 public class BoardController {
+    //annotation은 바로 밑에 줄만 적용이 된다.
     @Autowired
     private BoardService boardService;
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping("/save") // /board/save
     public String saveForm() {
@@ -48,6 +53,13 @@ public class BoardController {
         if (boardDTO.getFileAttached() == 1) {
             List<BoardFileDTO> boardFileDTOList = boardService.findFile(id);
             model.addAttribute("boardFileList", boardFileDTOList);
+        }
+
+        List<CommentDTO> commentDTOList = commentService.findAll(id);
+        if(commentDTOList.size() == 0){
+            model.addAttribute("commentList", null);
+        }else{
+            model.addAttribute("commentList", commentDTOList);
         }
         return "boardPages/boardDetail";
     }
