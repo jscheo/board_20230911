@@ -14,7 +14,7 @@
     <select id="findAll" resultType="board">
         select id, boardWriter, boardTitle,
                date_format(createdAt, "%y-%m-%d %H:%i:%s") as createdAt, boardHits
-        from board_table
+        from board_table order by id desc
     </select>
     <update id="updateHits" parameterType="Long">
         update board_table set boardHits = boardHits + 1 where id = #{id}

@@ -46,8 +46,8 @@ public class BoardController {
         model.addAttribute("board", boardDTO);
         // 첨부된 파일이 있다면 파일을 가져옴
         if (boardDTO.getFileAttached() == 1) {
-            BoardFileDTO boardFileDTO = boardService.findFile(id);
-            model.addAttribute("boardFile", boardFileDTO);
+            List<BoardFileDTO> boardFileDTOList = boardService.findFile(id);
+            model.addAttribute("boardFileList", boardFileDTOList);
         }
         return "boardPages/boardDetail";
     }

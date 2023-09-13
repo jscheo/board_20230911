@@ -27,7 +27,8 @@ public class BoardService {
             - 파일 없다.
                 fileAttached=0, 나머지는 기존 방식과 동일
          */
-        if (boardDTO.getBoardFile().isEmpty()) {
+            // get(0)는 0번인덱스가 있냐없냐로 판단 list객체로 담기때문
+        if (boardDTO.getBoardFile().get(0).isEmpty()) {
             // 파일 없다.
             boardDTO.setFileAttached(0);
             boardRepository.save(boardDTO);
@@ -36,28 +37,28 @@ public class BoardService {
             boardDTO.setFileAttached(1);
             // 게시글 저장 후 id값 활용을 위해 리턴 받음.
             BoardDTO savedBoard = boardRepository.save(boardDTO);
-            // 파일만 따로 가져오기
-            MultipartFile boardFile = boardDTO.getBoardFile();
-            // 파일 이름 가져오기
-            String originalFilename = boardFile.getOriginalFilename();
-            System.out.println("originalFilename = " + originalFilename);
-            // 저장용 이름 만들기
-            System.out.println(System.currentTimeMillis());
-            String storedFileName = System.currentTimeMillis() + "-" + originalFilename;
-            System.out.println("storedFileName = " + storedFileName);
-            // BoardFileDTO 세팅
-            BoardFileDTO boardFileDTO = new BoardFileDTO();
-            boardFileDTO.setOriginalFileName(originalFilename);
-            boardFileDTO.setStoredFileName(storedFileName);
-            boardFileDTO.setBoardId(savedBoard.getId());
-            // 파일 저장용 폴더에 파일 저장 처리
-            String savePath = "C:\\spring_img\\" + storedFileName;
-            boardFile.transferTo(new File(savePath));
-            // board_file_table 저장 처리
-            boardRepository.saveFile(boardFileDTO);
+            //파일이 여러개 이기 때문에 반복문으로 파일 하나씩 꺼내서 저장 처리
+            for(MultipartFile boardFile : boardDTO.getBoardFile()) {
+                // 파일만 따로 가져오기
+//                MultipartFile boardFile = boardDTO.getBoardFile();
+                // 파일 이름 가져오기
+                String originalFilename = boardFile.getOriginalFilename();
+                System.out.println("originalFilename = " + originalFilename);
+                // 저장용 이름 만들기
+                String storedFileName = System.currentTimeMillis() + "-" + originalFilename;
+                System.out.println("storedFileName = " + storedFileName);
+                // BoardFileDTO 세팅
+                BoardFileDTO boardFileDTO = new BoardFileDTO();
+                boardFileDTO.setOriginalFileName(originalFilename);
+                boardFileDTO.setStoredFileName(storedFileName);
+                boardFileDTO.setBoardId(savedBoard.getId());
+                // 파일 저장용 폴더에 파일 저장 처리
+                String savePath = "C:\\spring_img\\" + storedFileName;
+                boardFile.transferTo(new File(savePath));
+                // board_file_table 저장 처리
+                boardRepository.saveFile(boardFileDTO);
+            }
         }
-
-
     }
 
     public List<BoardDTO> findAll() {
@@ -80,7 +81,7 @@ public class BoardService {
         boardRepository.delete(id);
     }
 
-    public BoardFileDTO findFile(Long id) {
+    public List<BoardFileDTO> findFile(Long id) {
         return boardRepository.findFile(id);
     }
 }

@@ -10,7 +10,7 @@
         <input type="text" name="boardWriter" placeholder="작성자를 입력하세요"> <br>
         <input type="text" name="boardPass" placeholder="비밀번호를 입력하세요"> <br>
         <textarea name="boardContents" cols="30" rows="10"></textarea> <br>
-        <input type="file" name="boardFile"> <br>
+        <input type="file" name="boardFile" multiple> <br>
         <input type="submit" value="작성">
     </form>
 </div>
