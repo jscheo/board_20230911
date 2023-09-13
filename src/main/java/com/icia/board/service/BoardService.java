@@ -124,4 +124,11 @@ public class BoardService {
         boardDTO.setFileAttached(0);
         boardRepository.save(boardDTO);
     }
+
+    public List<BoardDTO> searchList(String q, String type) {
+        Map<String, String> searchParam = new HashMap<>();
+        searchParam.put("q", q);
+        searchParam.put("type", type);
+        return boardRepository.searchList(searchParam);
+    }
 }

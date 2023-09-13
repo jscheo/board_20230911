@@ -125,7 +125,8 @@
         });
     }
     const board_list = () => {
-        location.href = "/board/list";
+        const page = '${page}';
+        location.href = "/board/list?page=" +page;
     }
     const board_update = () => {
         const id = '${board.id}';

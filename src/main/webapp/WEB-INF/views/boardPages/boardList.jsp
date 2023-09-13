@@ -7,6 +7,17 @@
 </head>
 <body>
 <div id="section">
+    <%-- 검색 창 --%>
+    <div class="container">
+        <form action="/board/search" method="get">
+            <select name="type">
+                <option value="boardTitle">제목</option>
+                <option value="boardWriter">작성자</option>
+            </select>
+            <input type="text" name="q" placeholder="검색어를 입력하세요">
+            <input type="submit" value="검색">
+        </form>
+    </div>
     <div class="container" id="list">
         <table class="table table-striped table-hover text-center">
             <tr>

@@ -49,6 +49,15 @@ public class BoardController {
         return "boardPages/boardList";
     }
 
+    @GetMapping("/search")
+    public String search(@RequestParam("q") String q,
+                        @RequestParam("type") String type,
+                         Model model){
+        List<BoardDTO> boardDTOList = boardService.searchList(q, type);
+        model.addAttribute("boardList", boardDTOList);
+        return "boardPages/boardList";
+    }
+
     @GetMapping
     public String findById(@RequestParam("id") Long id,
                            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
