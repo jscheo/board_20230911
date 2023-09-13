@@ -61,7 +61,7 @@
         <%-- c:choose : if역활 c:otherwise : other역활
         jsp /java에 쓴 html 형태가 같아야 일그러지지 않고 일관되게 출력된다.--%>
         <c:choose>
-            <c:when test="#{commentList == null}">
+            <c:when test="${commentList == null}">
                 <h3>작성된 댓글이 없습니다.</h3>
             </c:when>
             <c:otherwise>
@@ -125,7 +125,7 @@
         });
     }
     const board_list = () => {
-        location.href = "/board/";
+        location.href = "/board/list";
     }
     const board_update = () => {
         const id = '${board.id}';

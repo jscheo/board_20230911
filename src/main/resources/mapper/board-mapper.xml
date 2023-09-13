@@ -34,4 +34,10 @@
     <select id="findFile" parameterType="Long" resultType="boardFile">
         select * from board_file_table where boardId = #{boardId}
     </select>
+    <select id="pagingList" parameterType="java.util.HashMap" resultType="board">
+        select id, boardWriter, boardTitle,
+               date_format(createdAt, "%y-%m-%d %H:%i:%s") as createdAt, boardHits
+        from board_table order by id desc limit #{start}, #{limit}
+-- map으로 보낼 때는 맵에 데이터를 넣은 변수명을 넣어주면 된다.
+    </select>
 </mapper>
