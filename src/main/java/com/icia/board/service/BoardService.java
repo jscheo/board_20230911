@@ -125,10 +125,42 @@ public class BoardService {
         boardRepository.save(boardDTO);
     }
 
-    public List<BoardDTO> searchList(String q, String type) {
-        Map<String, String> searchParam = new HashMap<>();
+    public List<BoardDTO> searchList(String q, String type, int page) {
+        Map<String, Object> searchParam = new HashMap<>();
         searchParam.put("q", q);
         searchParam.put("type", type);
+
+        int pageLimit = 3; // 한페이지당 보여줄 글 갯수
+        int pagingStart = (page - 1) * pageLimit;
+        searchParam.put("start", pagingStart);
+        searchParam.put("limit", pageLimit);
+
         return boardRepository.searchList(searchParam);
+    }
+
+    public PageDTO searchPageNumber(String q, String type, int page) {
+        int pageLimit = 3; // 한페이지에 보여줄 글 갯수
+        int blockLimit = 3; // 하단에 보여줄 페이지 번호 갯수
+        Map<String, String> pagingParam = new HashMap<>();
+        pagingParam.put("q", q);
+        pagingParam.put("type", type);
+        // 검색어 기준 글 갯수 조회
+        int boardCount = boardRepository.boardSearchCount(pagingParam);
+        // 검색어 기준 전체 페이지 갯수 계산
+        int maxPage = (int) (Math.ceil((double)boardCount / pageLimit));
+        // 검색어 기준 시작 페이지 값 계산(1, 4, 7, 10 ~~)
+        int startPage = (((int)(Math.ceil((double) page / blockLimit))) - 1) * blockLimit + 1;
+        // 검색어 기준 마지막 페이지 값 계산(3, 6, 9, 12 ~~)
+        int endPage = startPage + blockLimit - 1;
+        // 검색어 기준 전체 페이지 갯수가 계산한 endPage 보다 작을 때는 endPage 값을 maxPage 값과 같게 세팅
+        if (endPage > maxPage) {
+            endPage = maxPage;
+        }
+        PageDTO pageDTO = new PageDTO();
+        pageDTO.setPage(page);
+        pageDTO.setMaxPage(maxPage);
+        pageDTO.setEndPage(endPage);
+        pageDTO.setStartPage(startPage);
+        return pageDTO;
     }
 }

@@ -47,6 +47,11 @@
         select id, boardWriter, boardTitle,
                date_format(createdAt, "%y-%m-%d %H:%i:%s") as createdAt, boardHits
         from board_table where ${type} like concat('%', #{q},'%') order by id desc
+            limit #{start}, #{limit}
 -- 컬럼이 와야 하는 부분에 값을 넣어 바꿀때에는 $를 붙여서 사용 하고 like뒤에 문자와 변수를 같이 쓸 때에는 concat을 이용해서 써줘야한다.
+    </select>
+
+    <select id="searchCount" parameterType="java.util.HashMap" resultType="Integer">
+        select count(id) from board_table where ${type} like concat('%', #{q},'%')
     </select>
 </mapper>

@@ -126,7 +126,10 @@
     }
     const board_list = () => {
         const page = '${page}';
-        location.href = "/board/list?page=" +page;
+        const q = '${q}';
+        const type = '${type}';
+
+        location.href = "/board/list?page=" +page + "&q=" + q + "&type=" + type;
     }
     const board_update = () => {
         const id = '${board.id}';
